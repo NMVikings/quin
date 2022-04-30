@@ -1,8 +1,13 @@
 import { LatLngTuple } from "leaflet";
 import { useEffect } from "react";
 import { Marker, Popup, useMap } from "react-leaflet";
+import { Launch } from "../types";
 
-const Markers = ({ data }: any) => {
+type MarkersProps = {
+  data: Launch[] | undefined;
+};
+
+const Markers = ({ data }: MarkersProps) => {
   const map = useMap();
 
   useEffect(() => {
@@ -12,15 +17,18 @@ const Markers = ({ data }: any) => {
     }
 
     const coords = data.map(
-      ({ pad }: any) =>
-        [Number(pad.latitude), Number(pad.longitude)] as LatLngTuple
+      ({ pad }) => [Number(pad.latitude), Number(pad.longitude)] as LatLngTuple
     );
     map.fitBounds(coords);
   }, [map, data]);
 
+  if (!data) {
+    return null;
+  }
+
   return (
     <>
-      {data?.map((launch: any) => {
+      {data.map((launch) => {
         const { latitude, longitude } = launch.pad;
 
         return (

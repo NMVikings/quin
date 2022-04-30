@@ -3,54 +3,25 @@ import React, { useState } from "react";
 import { MapContainer, TileLayer } from "react-leaflet";
 import { useGetLaunchesQuery } from "./services/launch";
 import Markers from "./components/Markers";
+import ControlPanel from "./components/ControlPanel";
+
+const defaultFilters = {
+  startDate: new Date().toISOString(),
+  endDate: addMonths(new Date(), 3).toISOString(),
+};
 
 function App() {
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(addMonths(startDate, 3));
+  const [filters, setFilters] = useState(defaultFilters);
 
-  const { data, isFetching } = useGetLaunchesQuery({
-    startDate: startDate.toISOString(),
-    endDate: endDate.toISOString(),
-  });
-
-  const handleStartDateChange = (e: any) => {
-    setStartDate(new Date(e.target.value));
-  };
-
-  const handleEndDateChange = (e: any) => {
-    setEndDate(new Date(e.target.value));
-  };
-
-  const startDateValue = startDate.toISOString().split("T")[0];
-  const endDateValue = endDate.toISOString().split("T")[0];
+  const { data, isFetching } = useGetLaunchesQuery(filters);
 
   return (
     <div className="page">
-      <div className="controlPanel">
-        <div className="inputWrapper">
-          <label htmlFor="startDate">Start date</label>
-          <input
-            type="date"
-            id="startDate"
-            onChange={handleStartDateChange}
-            max={endDateValue}
-            value={startDateValue}
-            disabled={isFetching}
-          />
-        </div>
-        <div className="inputWrapper">
-          <label htmlFor="endDate">End date</label>
-          <input
-            type="date"
-            id="endDate"
-            onChange={handleEndDateChange}
-            min={startDateValue}
-            value={endDateValue}
-            disabled={isFetching}
-          />
-        </div>
-        {isFetching && <div className="loadingIndicator">Loading...</div>}
-      </div>
+      <ControlPanel
+        isFetching={isFetching}
+        onSubmit={setFilters}
+        defaultValues={defaultFilters}
+      />
       <div className="mapWrapper">
         <MapContainer scrollWheelZoom>
           <TileLayer
