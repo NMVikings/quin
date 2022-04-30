@@ -1,24 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { addMonths } from "date-fns";
+import React from "react";
+import { useGetLaunchesQuery } from "./services/launch";
+
+const startDate = new Date();
+const endDate = addMonths(startDate, 3);
 
 function App() {
+  const { data, isLoading } = useGetLaunchesQuery({
+    startDate: startDate.toISOString(),
+    endDate: endDate.toISOString(),
+  });
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {data?.map((data) => (
+        <div key={data.id}>{data.name + data.window_start}</div>
+      ))}
     </div>
   );
 }
