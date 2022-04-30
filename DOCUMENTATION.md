@@ -7,4 +7,9 @@
 
 # What I want to change
 
-- I want to add `eslint` (forgot to do it before the start)
+- Add `eslint` (forgot to do it before the start)
+- Add tests
+- Add remaining features (because they are quite interesting)
+- Make the ControlPanel looks better, not just simple HTML
+- Use css-modules or maybe tailwindcss to style UI
+- Improve UX (Because right now it only disables inputs while fetching)
