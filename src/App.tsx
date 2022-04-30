@@ -1,6 +1,8 @@
 import { addMonths } from "date-fns";
 import React from "react";
+import { MapContainer, TileLayer } from "react-leaflet";
 import { useGetLaunchesQuery } from "./services/launch";
+import Markers from "./components/Markers";
 
 const startDate = new Date();
 const endDate = addMonths(startDate, 3);
@@ -17,9 +19,13 @@ function App() {
 
   return (
     <div>
-      {data?.map((data) => (
-        <div key={data.id}>{data.name + data.window_start}</div>
-      ))}
+      <MapContainer scrollWheelZoom>
+        <TileLayer
+          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <Markers data={data} />
+      </MapContainer>
     </div>
   );
 }
